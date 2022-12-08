@@ -41,4 +41,54 @@ public class TodoController {
 		 return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	 }
  }
+ 
+ @GetMapping("/todos/{id}")
+ public ResponseEntity<?> getSingleTodo(@PathVariable("id") String id){
+	 Optional<TodoDTO> todoOptional = todoRepo.findById(id);
+	 if (todoOptional.isPresent()) {
+		 return new ResponseEntity<>(todoOptional.get()HttpStatus.OK);
+	 }else {
+		 return new ResponseEntity("Todo not found with id"+id, HttpStatus.Not_Found);
+	 }
+ }
+ 
+ @PutMapping("/todos/{id}")
+ public ResponseEntity<?> updatedById(@PathVariable("id") String id, @RequestBody TodoDTO todo){
+	 Optional<TodoDTO> todoOptional = todoRepo.findById(id);
+	 if (todoOptional.isPresent()) {
+		 todoDTO todoSave = todoOptional.get();
+		 todoToSave.setCompleted(todo.getCompleted() != null ? todo.getCompleted() : todoToSave.getCompleted());
+		 todoToSave.setTodo(todo.getTodo() != null ? todo.getTodo() : todoToSave.getTodo());
+		 todoToSave.setDescription(todo.getDescription() != null ? todo.getDescription() : todoToSave.getDescription());
+		 todoToSave.setUpdatedAt(new Date(System.currentTimeMillis()));
+		 todoRepo.save(todoToSave);
+		 return new ResponseEntity<>(todoToSave, HttpStatus.OK);
+	 }else {
+		 return new ResponseEntity<>("Todo not found with id "+id, HttpStatus.NOT_FOUND);
+	 }
+	 
+	 }else {
+		 return new ResponseEntity<>("Todo not found with id"+id, HttpStatus.NOT_FOUND);
+	 }
+  }
+
+ public ResponseEntity<T> deletedById(@PathVariable("id") String id){
+	 public ResponseEntity<T> deletedById(@PathVariable("id") String id){
+		 try {
+			 todoRepo.deletedById(id);
+			 return new ResponseEntity<>("Successfully deleted with id " +id, HttpStatus.OK);
+		 } catch (Exception e) {
+			 return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		 }
+	 }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 }
